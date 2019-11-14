@@ -68,7 +68,8 @@ userSchema.virtual("tasks", {
 // if next() is not provided its gonna stack for ever!
 userSchema.pre("save", async function(next) {
   const user = this;
-  console.log("just before saving document operation");
+  // console.log("just before saving document operation");
+  
   // condition for password changeing and creation
   // .isModified() - document method that returns true/false
   //  whether field value was changed or not

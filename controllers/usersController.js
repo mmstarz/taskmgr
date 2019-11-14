@@ -17,7 +17,7 @@ exports.createUser = async (req, res, next) => {
   const user = new User(req.body);
 
   try {
-    await user.save();
+    // await user.save();
     sendWelcomeEmail(user.email, user.name);
     const token = await user.generateAuthToken();
     // res.status(201).send("New user created successfully");
@@ -70,7 +70,8 @@ exports.setProfileAvatar = async (req, res, next) => {
   // access file via req.file
   // req.user.avatar = req.file.buffer;
 
-  // take binary buffer convert to png with .png()
+  // sharp
+  // takes binary buffer convert to png with .png()
   // resize the image with .resize({width, height})
   // return updated buffer with .toBuffer()
   try {

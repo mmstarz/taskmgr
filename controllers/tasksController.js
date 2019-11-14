@@ -115,35 +115,25 @@ exports.updateTask = async (req, res, next) => {
       return res.status(400).send("Wrong query params");
     }
 
-    await Task.findOne({ _id: req.params.id, author: req.user._id }).exec(
-      async (err, task) => {
-        if (err) {
-          throw err;
-        }
-
-        if (!task) {
-          return res.status(404).send("Task do not exists");
-        }
-
-        updates.forEach(update => (task[update] = req.body[update]));
-        task.save();
-
-        res.send(task);
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, author: req.user._id },
+      { $set: req.body },
+      {
+        new: true,
+        runValidators: true
       }
     );
-    // const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-    //   new: true,
-    //   runValidators: true
-    // });
-    // if (!updatedTask) {
-    //   return res.status(404).send("Task do not exists");
-    // }
-    // res.send(updatedTask);
-  } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400).send(err.message);
+
+    if (!task) {
+      return res.status(404).send("Task not exists");
     }
-    res.status(500).send(err.message);
+
+    res.send(task);
+  } catch (err) {
+    // if (err.name === "ValidationError") {
+    //   return res.status(400).send(err.message);
+    // }
+    res.status(400).send(err.message);
   }
 };
 
@@ -169,6 +159,7 @@ exports.removeTask = async (req, res, next) => {
     if (count === 0) {
       return res.send("No tasks left");
     }
+
     res.send(`${count} tasks left`);
   } catch (err) {
     res.status(500).send(err.message);

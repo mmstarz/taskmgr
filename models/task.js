@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const { Schema } = mongoose;
 // https://mongoosejs.com/docs/populate.html
 // ref - tells where to look for value. Reference to the model
@@ -7,8 +8,15 @@ const { Schema } = mongoose;
 // of a certain ObjectId
 const taskSchema = new Schema(
   {
-    description: { type: String, required: true, trim: true },
-    completed: { type: Boolean, default: false },
+    description: {
+      type: String,
+      required: true,
+      trim: true,  
+    },
+    completed: {
+      type: Boolean,
+      default: false,  
+    },
     author: { type: Schema.Types.ObjectId, required: true, ref: "User" }
   },
   { timestamps: true }
@@ -26,11 +34,11 @@ taskSchema.pre("save", async function(next) {
   // .isModified() - document method that returns true/false
   //  whether field value was changed or not
   if (task.isModified("description")) {
-    console.log("new description: ", task.description);
+    // console.log("new description: ", task.description);
   }
 
   if (task.isModified("completed")) {
-    console.log("completed: ", task.completed);
+    // console.log("completed: ", task.completed);
   }
 
   next();
